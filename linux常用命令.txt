@@ -1,0 +1,12 @@
+1.grep
+format:  
+	grep <parameters> 'content' filename1 filename2
+paramenters:
+	-c 只输出匹配行的计数
+	-i 不区分大小写
+	-h 查询多文件时不显示文件名
+	-l 查询结果只输出含有匹配字符的文件名
+	-n 显示匹配行或行号
+	-v 显示不含匹配文本的所有行
+2.find
+find <路径> -name filename :按文件名在指定路径下搜索文件 

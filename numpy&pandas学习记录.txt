@@ -1,0 +1,495 @@
+第一部分：numpy
+1.
+import numpy as np //将numpy简写为np
+array = np.array([ [1,2,3],
+                   [4,5,6] ]) //利用numpy将数组转化为矩阵
+print(array)                        //输出矩阵array，注意：中间无逗号
+print('number of dim:', array.ndim) //输出矩阵array的维度，平面为2维，。。。
+print('shape:', array.shape)        //输出矩阵array的形状，输出格式为（几行，几列）
+print('size:', array.size)	    //输出元素总数
+2.
+import numpy as np
+a = np.array([2,3,4], dtype=np.int) //dtype为矩阵元素的数据类型，包括np.int , np.float等;默认为64位，若想数据内存更                                      小，可以np.int32, np.int16, np.float32, np.float16等等
+a = np.zeros(3, 4) //定义了一个3行4列的全为零的矩阵
+a = np.ones(3, 4)  //定义了一个3行4列的全为1的矩阵
+a = np.empty(3, 4) //定义了一个3行4列的为空矩阵
+a = np.arange(12).reshape((3,4)) //定义了一个3行4列的0到11的有序矩阵；arange还可以定义步长，与arange本身的用法一直
+a = np.linspace(1, 10, 6) //定义了一个将1到10分为6等分的线段；若还需将之改为矩阵可以用reshape
+3.numpy中的运算：+ - * / **(次方)
+import numpy as np
+a = np.array([10, 20, 30, 40])
+b = np.arange(4)
+c = a+b  //这里只演示加法运算，其他的运算同理；这里对应位置的+ - * /，这里的* 与矩阵乘法不一样，后面会阐述
+print(c) //输出：[10 21 32 43] 注意：矩阵元素之间是没有逗号的
+
+c = np.sin(a) //numpy中带有sin、cos、tan的函数，可以直接调用，同样是按照矩阵元素的方式输出的
+print(b)   //输出：[0 1 2 3]
+print(b<3) //判断b中哪些元素是小于3的，并输出[True True True False]；这样的判断还有 >、 == 等等
+
+矩阵乘法：
+import numpy as np
+a = np.array([[1, 1],
+              [0, 1]])
+b = np.arange(4).reshape((2, 2))
+
+c = a*b             //这里为对应位置的相乘
+c_dot = np.dot(a,b) //这里为矩阵乘法,另外一种写法：c_dot = a.dot(b)
+
+print(c)            //输出：[[0 1]
+                             [2 3]]
+print(c_dot)        //输出：[[2 4]
+                             [2 3]]
+4.sum、max、min
+import numpy as np
+a = np.random.random(2,4)  //定义了一个2行4列的矩阵，其中元素为0~1的随机数
+
+//axis=0时，在每一行中进行操作；axis=1时，在每一列中进行操作
+print(np.sum(a,axis=1))    //对每一列进行求和，并以矩阵形式输出
+print(np.min(a,axis=0))    //对每一行寻找最小值，并以矩阵形式输出
+print(np.max(a,axis=1))    //对每一列寻找最大值，并以矩阵形式输出
+
+5.求目标值的索引、平均值、中位数
+import numpy as np
+
+A = np.arange(2,14).reshape((3,4))
+print(np.argmin(A))   //输出矩阵中最小元素的索引
+print(np.argmax(A))   //输出矩阵中最大元素的索引
+print(np.mean(A))     //输出矩阵平均值，另外两种写法：A.mean() 、np.average(A)
+print(np.median(A))   //输出矩阵中位数
+print(np.cumsum(A))   //输出为矩阵的累加值（按照矩阵的方式输出，该矩阵与A矩阵形状一样）；第n个值为矩阵A前n个值的和
+print(np.diff(A))     //输出为矩阵的累差值（按照矩阵的方式输出，该矩阵比A矩阵列数少1）；第n个值为矩阵A中第n+1个值减                        去第n个值
+print(np.nonzero(A)) 
+//输出非零元素的索引；输出：(array([0,0,0,0,1,1,1,1,2,2,2,2]),array([0,1,2,3,0,1,2,3,0,1,2,3]；前面为非零元素的行，后面为列
+
+print(np.sort(A))       //对每行元素进行排序，并以矩阵形式输出
+print(np.transpose(A))  //矩阵的转置，并以矩阵的形式输出；另一种写法：print(A.T)
+
+print(np.clip(A,5,9))   
+//矩阵的截取：将矩阵A中小于5的数用5替换，将矩阵A中大于9的数用9替换，5和9之间的数保持不变，并以矩阵形式输出；clip(A, min,max)
+6.
+import numpy as np
+
+A = np.arange(3,15).reshape((3,4))
+print(A)
+
+for row in A:
+   print(row)    //将矩阵A的每行进行输出
+
+for row in A.T:
+   print(row)    //将矩阵A的转置矩阵的每行进行输出，也就是输出矩阵A的列
+
+print(A.flatten())  //将矩阵A转换为一行的序列
+
+for item in A.flat:
+   print(item)      //输出矩阵中的每一个元素，需要用flat函数
+7.合并(1)
+import numoy as np
+
+A = np.array([1,1,1])
+B = np.array([2,2,2])
+
+c = np.vstack((A,B))    
+//vertical stack,向下进行合并；输出：[[1 1 1]
+                                      [2 2 2]]
+d = np.hstack((A,B))
+//horizontal stack,向右进行合并；输出：[1 1 1 2 2 2]
+
+//加维度
+A = A[:,np.newaxis]     //在列上加了一个维度
+print(A)
+//输出：[[1]
+         [1]
+         [1]]
+A = A[np.newaxis,:]     //在行上加了一个维度
+print(A)                //输出：[[1 1 1]]
+8.合并(2)
+import numoy as np
+
+A = np.array([1,1,1])[:,np.newaxis]   //在列上加了一个维度
+B = np.array([2,2,2])[:,np.newaxis]   //在列上加了一个维度
+
+d = np.hstack((A,B))
+//horizontal stack,向右进行合并；输出：[[1 2]
+                                        [1 2]
+                                        [1 2]]
+9.合并(3)
+import numoy as np
+
+A = np.array([1,1,1])
+B = np.array([2,2,2])
+
+c = np.concatenate((A,B,B,A),axis=1)
+print(c)
+//输出：[[1 2 2 1]
+         [1 2 2 1]
+         [1 2 2 1]]
+c = np.concatenate((A,B),axis=0)
+print(c)
+//输出：[[1]
+         [1]
+         [1]
+         [2]
+         [2]
+         [2]]
+10.矩阵分割(1)
+import numpy as np
+
+A = np.arange(12).reshape((3,4))
+print(A)
+
+print(np.split(A,2,axis=1))
+//将A纵向等分分割为2个部分，
+输出:[array([[0,1],
+             [4,5],
+             [8,9]]),array([[2,3],
+                            [6,7],
+                            [10,11]])]
+
+print(np.split(A,3,axis=0))
+//将A横向等分分割为3个部分，
+输出：[array([[0,1,2,3]]),array([[4,5,6,7]]),array([[8,9,10,11]])]
+
+print(np.array_split(A,3,axis=1))
+//将A纵向分割为3个部分（不等分割），
+输出:[array([[0,1],
+             [4,5],
+             [8,9]]),array([[2],
+                            [6],
+                            [10]])，array([[3],
+                            [7],
+                            [11]])]
+ps:split(参数1，参数2，参数3)；参数1为矩阵，参数2为分割的块数，参数3为axis=1(纵向分割)/axis=0(横向分割)
+11.矩阵分割(2)
+import numpy as np
+
+A = np.arange(12).reshape((3,4))
+print(A)
+
+print(np.vsplit(A,3))   //纵向分割为3块
+print(np.hsplit(A,2))   //横向分割为2块
+12.numpy中的赋值和copy
+import numpy as np
+a = np.arange(4)
+
+b = a           //将b与a关联起来，b is a，改变a中的值会改变b中的值，改变b中的值也会改变a中的值
+d = b           //将d与b关联起来，d is b，由于b is a,那么d is a
+
+c = a.copy()    //只是将a中的值copy到c，改变a的值不会改变c的值，改变c的值也不会改变a中的值
+
+第二部分：pandas
+1.
+import pandas as pd
+import numpy as np
+
+s = pd.Series([1,2,45,np.nan,44,1])
+//定义一个列表，
+输出：(前面为index,后面为value；dtype为float64；在pandas中以float64/float32来保存数据)
+0  1.0
+1  3.0
+2  45.0
+3  NaN
+4  44.0
+5  1.0
+dtype:float64
+
+dates = pd.date_range('20160101',periods=6)
+//定义了一个序列，dtype='datetime64[ns]',
+输出：
+DatetimeIndex(['2016-01-01','2016-01-02','2016-01-03','2016-01-04','2016-01-05','2016-01-06'],dtype='datetimes64[ns]',freq='D')
+
+df = pd.DataFrame(np.random.randn(6,4),index=dates,columns=['a','b','c','d'])
+//定义了一个6行4列二维列表，行索引为dates，列索引为a,b,c,d,其中的元素值为随机数(因为太长了，所以下面的输出我用emp代替)，输出：
+            a    b    c    d
+2016-01-01  emp  emp  emp  emp  
+2016-01-02  emp  emp  emp  emp  
+2016-01-03  emp  emp  emp  emp  
+2016-01-04  emp  emp  emp  emp  
+2016-01-05  emp  emp  emp  emp  
+2016-01-06  emp  emp  emp  emp  
+
+df1 = pd.DataFrame(np.arange(12).reshape((3,4)))
+//定义了一个3行4列二维列表，行索引和列索引为默认值，
+输出：
+    0   1   2   3
+0   0   1   2   3
+1   4   5   6   7
+2   8   9   10  11
+
+df2 = pd.DataFrame({'A'：1,
+                    'B':dp.Timestamp('20130102'),
+                    'C':pd.Series(1,index=list(range(4)),dtype='float32'),
+                    'D':np.array([3]*4,dtype='int32'),
+                    'E':pd.Categorical(["test","train","test","train"]),
+                    'F':'foo'})
+//以字典的方式定义了一个4行6列的二维列表，列索引为A,B,C,D,E,F，
+输出：
+    A     B           C   D   E     F	
+0  1.0  2013-01-02   1.0  3  test  foo
+1  1.0  2013-01-02   1.0  3  train foo
+2  1.0  2013-01-02   1.0  3  test  foo
+3  1.0  2013-01-02   1.0  3  train foo
+
+print(df2.dtypes)
+//输出：
+A   float64
+B   datetime64[ns]
+C   float32
+D   int32
+E   category
+F   object
+dtype:object
+
+print(df2.index)
+//输出df2行索引，输出：Int64Index([0,1,2,3],dtype='int64')
+
+print(df2.columns)
+//输出df2列索引，输出：Index(['A','B','C','D','E','F'],dtype='object')
+
+print(df2.values)
+//输出df2的值，输出：
+array([[1.0,Timestamp('2013-01-02 00:00:00'),1.0,3,'test','foo'],
+	[1.0,Timestamp('2013-01-02 00:00:00'),1.0,3,'train','foo'],
+	[1.0,Timestamp('2013-01-02 00:00:00'),1.0,3,'test','foo'],
+	[1.0,Timestamp('2013-01-02 00:00:00'),1.0,3,'train','foo']],dtype=object)
+
+print(df2.describe())
+//describe()函数将输出该二维列表的一些描述，std为方差，这些都是数字的描述，所以其中若有非数字的内容将会被忽略，
+输出：
+       A     C     D
+count  4.0   4.0   4.0
+mean   1.0   1.0   3.0
+std    0.0   0.0   0.0
+min    1.0   1.0   3.0
+25%    1.0   1.0   3.0
+50%    1.0   1.0   3.0
+75%    1.0   1.0   3.0
+max    1.0   1.0   3.0
+
+print(df2.T)  //转置
+
+print(df.sort_index(axis=1,ascending=Flase))  //axis=1 对列进行排序,ascending=Flase 倒序
+print(df.sort_index(axis=0,ascending=Flase))  //axis=1 对行进行排序,ascending=Flase 倒序
+print(df.sort_values(by='E')) //对索引为E的列，按照value进行排序
+
+2.选择数据(1)
+import pandas as pd
+import numpy as np
+
+dates = pd.date_range('20130101',periods=6)
+df = pd.DataFrame(np.arange(24).reshape((6,4)),index=dates,columns=['A','B','C','D'])
+
+print(df['A'],df.A)                       //df['A']和df.A是一样的功能，都是输出df中A列的值
+print(df[0:3],df['20130102':'20130104'])  //df[0:3],df['20130102':'20130104']都是一样的功能，都是输出df中的第1到第4行
+
+3.选择数据(2)
+//以标签的方式选择数据，loc   （文本标签筛选）
+import pandas as pd
+import numpy as np
+
+print(df.loc['20130102'])            //选择输出'20130102'行
+print(df.loc['20130102',['A','B']])  //选择输出'20130102'行中的'A','B'两列
+print(df.loc[:,['A','B'])            //选择输出所有行中的'A','B'两列
+
+4.选择数据(3)
+//以位置的方式选择数据，iloc （数字位置筛选）
+import pandas as pd
+import numpy as np
+ 
+print(df.iloc[3])            //选择输出第4行
+print(df.iloc[3,1])          //选择输出第4行的第2列
+print(df.iloc[2:4,1:3])      //选择输出第3行到第5行的第2列到第4列，切片方式
+print(df.iloc[[1,2,4],1:3])  //选择输出第2、3、5行中的第2到4列，不连续切片方式
+
+4.选择数据(3)
+//以标签和位置的混合方式选择数据，ix   （数字、文本的混合筛选）
+import pandas as pd
+import numpy as np
+
+print(df.ix[:3,['A','C']])   //选择输出第1行到第4行中的'A','C'两列
+
+5.选择数据(4)
+//对比大小进行筛选
+import pandas as pd
+import numpy as np
+
+print(df[df.A>8])            //选择A列中大于8的数据，并将其所在行的所有数据都显示出来
+
+df[df.A>8] = 0               //此时A列中大于8的所在行的数据全部赋值为零
+df.A[df.A>8] = 0             //此时A列中大于8的所在行的数据中的A列全部赋值为零
+df.B[df.A>8] = 0             //此时A列中大于8的所在行的数据中的B列全部赋值为零
+
+df['F'] = np.nan             //新增一列'F',并将其中所有的数据赋值为np.nan(相当于none)
+df['E'] = pd.Series([1,2,3,4,5,6],index=pd.date_range('20130101',periods=6))
+//新增一列'E'，数据为[1,2,3,4,5,6]，以index的方式对齐（这里的index必须要与原数据的index一致）
+
+6.处理np.nan数据
+print(df.dropna(axis=0,how='any')) 
+//丢弃含有NaN的所在行；axis=0表示对行操作，how={'any','all'},how='any'表示只要行（列）中出现NaN就丢弃所在行（列），how='all'表示行（列）中所有数据都是NaN时才丢弃所在行（列），另外 how='any'为默认值
+
+print(df.fillna(value=0))
+//将其中所有的NaN数据赋值为0
+
+print(df.isnull())
+//检测数据是否缺失（NaN），打印df表格，将NaN所在的位置打印为True，未缺失数据所在的位置打印为False
+
+print(np.any(df.isnull())==True)
+//检测表格中是否至少包含一个缺失数据(NaN)，若有则打印出True，否则打印出False
+
+7.导入导出数据
+pandas可读取的数据格式：
+read_csv       [推荐使用改格式，基本、简单]
+read_excel
+read_hdf
+read_sql
+read_json
+read_msgpack(experimental)
+read_html      [读取网页格式]
+read_gbq(experimental)
+read_stata
+read_sas
+read_clipboard
+read_pickle    [python自带的压缩格式]
+
+pandas可保存的数据格式：
+to_csv       [推荐使用改格式，基本、简单]
+to_excel
+to_hdf
+to_sql
+to_json
+to_msgpack(experimental)
+to_html      [读取网页格式]
+to_gbq(experimental)
+to_stata
+to_sas
+to_clipboard
+to_pickle    [python自带的压缩格式]
+
+读取和保存文件
+import pandas as pd
+
+data = pd.read_csv('student.csv')      //读取student.csv文件（.csv文件可以用表格打开）
+data.to_pickle('student.pickle')       //保存data至student.pickle文件
+
+8.合并数据(1)
+concat属性：join=['inner','outer(默认)']，ignore_index=['True','False(默认)'],join_axes，append
+
+import pandas as pd
+import numpy as np
+
+#concatenating 合并
+df1 = pd.DataFrame(np.ones((3,4))*0,columns=['a','b','c','d'])  
+//输出全为0的3行4列表格，行索引为默认值，列索引为a,b,c,d
+df2 = pd.DataFrame(np.ones((3,4))*1,columns=['a','b','c','d'])
+//输出全为1的3行4列表格，行索引为默认值，列索引为a,b,c,d
+df3 = pd.DataFrame(np.ones((3,4))*2,columns=['a','b','c','d'])
+//输出全为2的3行4列表格，行索引为默认值，列索引为a,b,c,d
+
+res = pd.concat([df1,df2,df3],axis=0,ignore_index=True)
+//对于表格df1，df2，df3进行纵向合并，忽略原有行索引并生成新的行索引
+
+#join,['innner','outer']
+import pandas as pd
+import numpy as np
+
+df1 = pd.DataFrame(np.ones((3,4))*0,columns=['a','b','c','d'],index=[1,2,3])  
+//输出全为0的3行4列表格，行索引为[1,2,3]，列索引为a,b,c,d
+df2 = pd.DataFrame(np.ones((3,4))*1,columns=['b','c','d','e'],index=[2,3,4])
+//输出全为1的3行4列表格，行索引为[2,3,4]，列索引为b,c,d,e
+
+res = pd.concat([df1,df2],join='outer') 
+//join='outer'（默认值），进行纵向合并，并将没有的数据用NaN填充（例如：df1中没有e列，df2中没有a列）
+res = pd.concat([df1,df2],join='inner') 
+//join='inner'，进行纵向合并，且仅合并列索引相同的数据，并丢弃不相同的列
+
+#join_axes
+import pandas as pd
+import numpy as np
+
+df1 = pd.DataFrame(np.ones((3,4))*0,columns=['a','b','c','d'],index=[1,2,3])  
+//输出全为0的3行4列表格，行索引为[1,2,3]，列索引为a,b,c,d
+df2 = pd.DataFrame(np.ones((3,4))*1,columns=['b','c','d','e'],index=[2,3,4])
+//输出全为1的3行4列表格，行索引为[2,3,4]，列索引为b,c,d,e
+
+res = pd.concat([df1,df2],axis=1,join_axes=[df1.index]) 
+//对表格df1，df2进行横向合并，仅按照df1.index进行合并，将df2 index=4的数据丢弃，并在df2 index=1的后面以NaN进行填充
+
+#append 默认为axis=0 纵向添加数据 向下添加数据
+import pandas as pd
+import numpy as np
+
+df1 = pd.DataFrame(np.ones((3,4))*0,columns=['a','b','c','d'],index=[1,2,3])  
+//输出全为0的3行4列表格，行索引为[1,2,3]，列索引为a,b,c,d
+df2 = pd.DataFrame(np.ones((3,4))*1,columns=['a','b','c','d'],index=[2,3,4])
+//输出全为1的3行4列表格，行索引为[2,3,4]，列索引为a,b,c,d
+df3 = pd.DataFrame(np.ones((3,4))*1,columns=['a','b','c','d'],index=[2,3,4])
+//输出全为1的3行4列表格，行索引为[2,3,4]，列索引为a,b,c,d
+s1 = pd.Series([1,2,3,4],index=['a','b','c','d'])
+//创建一条序列，数据为[1,2,3,4]
+
+res = df1.append([df2,df3],ignore=True)
+//在df1的基础上向下添加df2，df3，并忽略掉df2,df3原有的index
+res = df1.append(s1,ignore=True)
+//在df1的基础上向下添加一条数据序列s1，并忽略掉s1原有的index
+
+9.合并数据(2)
+import pandas as pd
+import numpy as np
+
+left = pd.DataFrame({'key':['k0','k1','k2','k3'],
+		      'A':['A0','A1','A2','A3']},
+		      'B':['B0','B1','B2','B3']})
+right = pd.DataFrame({'key':['k0','k1','k2','k3'],
+		      'C':['C0','C1','C2','C3']},
+		      'D':['D0','D1','D2','D3']})
+res = pd.merge(left,right,on='key')
+//合并left、right两个表格，左右合并，以key列进行合并
+
+
+//基于多个key进行合并,how=['inner','outer','left','right'],how=left/right是基于左边/右边的key值进行合并；inner是合并所有的值，并将缺少的数据用NaN进行填充；outer是合并所有的值，将缺少的数据丢弃
+res = pd.merge(left,right,on=['key1',key2],how='right')
+
+//参数：indicator 在合并之后显示合并的方式 {left_only,right_only,both};indicator=True 默认列索引为 _merge;indicator='name' 就可以自定义改列索引为'name'
+res = pd.merge(left,right,on=['key1',key2],how='right',indicator='indicator_column')
+
+//参数：left_index,right_index 默认这两个参数值为False（此时按列索引进行纵向合并），将两个参数的值全置为True时，则进行横向合并
+res = pd.merge(left,right,left_index=True,right_index=True,how='right')
+
+//参数：suffixes 对于表格列索引加上后缀(但不给key值加后缀)，用于区分两个表格中相同的列索引
+boys = pd.DataFrame({'k':['K0','K1','K2'],'age'：[1,2,3]})
+girls = pd.DataFrame({'k':['K0','K0','K3'],'age'：[4,5,6]})
+res = pd.merge(boys,girls,on='k',suffixes=['_boys','girls',how='inner'])
+
+10.数据可视化
+需要用到matplotlib库中的pyplot方法
+import matplotlib.pyplot as plt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
